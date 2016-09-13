@@ -82,8 +82,8 @@ public class WebServiceCreationTest {
 	public void importProject(){
 		modelExplorer = new ModelExplorer();
 		modelExplorer.importProject(PROJECT_NAME);
-		modelExplorer.getProject(PROJECT_NAME).refresh();
-		modelExplorer.changeConnectionProfile(ConnectionProfileConstants.ORACLE_11G_PRODUCTS, PROJECT_NAME, "sources", "SourceModel.xmi");
+		modelExplorer.refreshProject(PROJECT_NAME);;
+		modelExplorer.changeConnectionProfile(ConnectionProfileConstants.ORACLE_11G_PRODUCTS, PROJECT_NAME, "sources", "ProductSource.xmi");
 	}
 	
 	@After
@@ -107,6 +107,8 @@ public class WebServiceCreationTest {
 				.nextPage()
 				.nextPage()
 				.finish();
+		
+		// TODO analyze operations and documents (proly as before) - VDB, WAR - getAll insert get delete http-basic
 	}
 	
 	@Test
@@ -120,26 +122,28 @@ public class WebServiceCreationTest {
 				.setInputMsgName("getAllProductInfo_Input")
 				.setOutputMsgName("getAllProductInfo_Output")
 				.finish();
+		
+		// TODO generate VDB, WAR and request qetAll http-basic 
 	}
 
 	@Test
 	public void testCreationFromViewTable(){
-		
+		// TODO qenerate WS model
 	}
 	
 	@Test
 	public void testCreationFromSourceTable(){
-		
+		// TODO qenerate WS model
 	}
 	
 	@Test@Ignore
 	public void testCreationFromViewProcedure(){
-		// TODO project doesn't contain view procedure yet
+		// TODO to be decided - project doesn't contain view procedure yet
 	}
 	
 	@Test@Ignore
 	public void testCreationFromSourceProcedure(){
-		// TODO project doesn't contain source procedure yet
+		// TODO to be decided - project doesn't contain source procedure yet
 	}
 	
 	@Test@Ignore

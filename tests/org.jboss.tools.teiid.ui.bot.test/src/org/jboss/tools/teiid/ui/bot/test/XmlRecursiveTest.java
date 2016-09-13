@@ -59,7 +59,7 @@ public class XmlRecursiveTest {
 		new WorkbenchShell().maximize();
 		modelExplorer = new ModelExplorer();
 		modelExplorer.importProject(PROJECT_NAME);
-		modelExplorer.getProject(PROJECT_NAME).refresh();
+		modelExplorer.refreshProject(PROJECT_NAME);
 		fileHelper = new ResourceFileHelper();
 		jdbcHelper = new TeiidJDBCHelper(teiidServer, VDB_NAME);
 		

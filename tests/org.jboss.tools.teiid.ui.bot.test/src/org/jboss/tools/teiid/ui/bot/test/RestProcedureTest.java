@@ -86,7 +86,7 @@ public class RestProcedureTest {
 		modelExplorer = new ModelExplorer();
 		fileHelper = new ResourceFileHelper();
 		modelExplorer.importProject(PROJECT_NAME);
-		modelExplorer.getProject(PROJECT_NAME).refresh();
+		modelExplorer.refreshProject(PROJECT_NAME);
 		modelExplorer.changeConnectionProfile(ConnectionProfileConstants.ORACLE_11G_PARTS_SUPPLIER, PROJECT_NAME, SOURCE_MODEL);
 		
 	}
