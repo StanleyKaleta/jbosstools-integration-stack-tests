@@ -38,6 +38,7 @@ import org.jboss.tools.teiid.reddeer.wizard.newWizard.VdbWizard;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -59,9 +60,9 @@ public class WebServiceCreationTest {
 	private static final String OPERATION_GET = "getProductInfo";
 	private static final String OPERATION_INSERT = "insertProductInfo";
 	private static final String OPERATION_DELETE = "deleteProductInfo";
-	private static final String DOCUMENT_PRODUCT = "productDocument";
-	private static final String DOCUMENT_GOOD = "goodResultsDocument";
-	private static final String DOCUMENT_BAD = "badResultsDocument";
+	private static final String DOCUMENT_PRODUCT = "ProductDocument";
+	private static final String DOCUMENT_OK = "OkResultDocument";
+	private static final String DOCUMENT_FAILED = "FailedResultDocument";
 	
 	@InjectRequirement
 	private static TeiidServerRequirement teiidServer;
@@ -91,7 +92,66 @@ public class WebServiceCreationTest {
 	}
 	
 	@Test
-	public void testCreationFromWsdl() throws IOException{
+	public void testCreationFromWsdl(){
+		modelExplorer.selectItem(PROJECT_NAME, "web_services");
+		MetadataModelWizard.openWizard()
+				.setModelName(WS_MODEL.substring(0,10))
+				.selectModelClass(MetadataModelWizard.ModelClass.WEBSERVICE)
+		        .selectModelType(MetadataModelWizard.ModelType.VIEW)
+		        .selectModelBuilder(MetadataModelWizard.ModelBuilder.BUILD_FROM_WSDL_URL)
+				.nextPage()
+				.setWsdlFileFromWorkspace(PROJECT_NAME, "others", "ProductInfo.wsdl")
+				.nextPage()
+				.nextPage()
+				.nextPage()
+				.nextPage()
+				.nextPage()
+				.finish();
+	}
+	
+	@Test
+	public void testCreationFromXmlDocument(){
+		modelExplorer.modelingWebService(true, PROJECT_NAME, "views", "XmlModel.xmi", DOCUMENT_PRODUCT)
+				.setLocation(PROJECT_NAME, "web_services")
+				.setModelName(WS_MODEL.substring(0,10))
+				.setInterfaceName(INTERFACE_NAME)
+				.setOperationName(OPERATION_GET_ALL)
+				.setInputMsgElement(PROJECT_NAME, "schemas", "ProductSchema.xsd", "ProductSchema.xsd", "EmptyInput")
+				.setInputMsgName("getAllProductInfo_Input")
+				.setOutputMsgName("getAllProductInfo_Output")
+				.finish();
+	}
+
+	@Test
+	public void testCreationFromViewTable(){
+		
+	}
+	
+	@Test
+	public void testCreationFromSourceTable(){
+		
+	}
+	
+	@Test@Ignore
+	public void testCreationFromViewProcedure(){
+		// TODO project doesn't contain view procedure yet
+	}
+	
+	@Test@Ignore
+	public void testCreationFromSourceProcedure(){
+		// TODO project doesn't contain source procedure yet
+	}
+	
+	@Test@Ignore
+	public void testWsWar(){
+		// TODO to be decided
+		// test security http-basic / none
+		// test CRUD operations
+	}
+	
+	
+	@Test@Ignore
+	public void testCreationFromWsdlDep() throws IOException{
 		// 1. Create Web Service Model
 		modelExplorer.deleteModel(PROJECT_NAME, "views", "XmlModel.xmi");
 		modelExplorer.selectItem(PROJECT_NAME, "web_services");
@@ -120,8 +180,8 @@ public class WebServiceCreationTest {
 		xmlEditor.deleteDocument("ProductInfo_getAllProductInfo_getAllProductsInfo_NewOutput");
 		new WebServiceModelEditor(WS_MODEL).close();
 		xmlEditor.renameDocument("ProductInfo_getProductInfo_getProductsInfo_OutputMsg", DOCUMENT_PRODUCT);
-		xmlEditor.renameDocument("ProductInfo_deleteProductInfo_deleteProductsInfo_ResultOutput", DOCUMENT_GOOD);
-		xmlEditor.renameDocument("ProductInfo_insertProductInfo_insertProductsInfo_ResultOutput", DOCUMENT_BAD);
+		xmlEditor.renameDocument("ProductInfo_deleteProductInfo_deleteProductsInfo_ResultOutput", DOCUMENT_OK);
+		xmlEditor.renameDocument("ProductInfo_insertProductInfo_insertProductsInfo_ResultOutput", DOCUMENT_FAILED);
 		
 		xmlEditor.openDocument(DOCUMENT_PRODUCT);
 		xmlEditor.openMappingClass("ProductsInfo_Output_Instance");
@@ -131,7 +191,7 @@ public class WebServiceCreationTest {
 		xmlEditor.returnToParentDiagram();
 		xmlEditor.returnToParentDiagram();
 		
-		xmlEditor.openDocument(DOCUMENT_GOOD);
+		xmlEditor.openDocument(DOCUMENT_OK);
 		xmlEditor.openMappingClass("putResults");
 		outputTransfEditor = xmlEditor.openTransformationEditor();
 		outputTransfEditor.insertAndValidateSql("SELECT 'Operation Successful!' AS results");
@@ -139,7 +199,7 @@ public class WebServiceCreationTest {
 		xmlEditor.returnToParentDiagram();
 		xmlEditor.returnToParentDiagram();
 		
-		xmlEditor.openDocument(DOCUMENT_BAD);
+		xmlEditor.openDocument(DOCUMENT_FAILED);
 		xmlEditor.openMappingClass("putResults");
 		outputTransfEditor = xmlEditor.openTransformationEditor();
 		outputTransfEditor.insertAndValidateSql("SELECT 'Operation Failed!' AS results");
@@ -180,9 +240,8 @@ public class WebServiceCreationTest {
 		// 4. Generate WAR and test it
 		generateWarAndTestIt("WsWsdlVdb");
 	}
-	
-	@Test
-	public void testCreationFromRelationalModel() throws IOException{
+	@Test@Ignore
+	public void testCreationFromRelationalModelDep() throws IOException{
 		// 1. Create Web Service Model
 		modelExplorer.deleteModel(PROJECT_NAME, "views", "XmlModel.xmi");
 		modelExplorer.modelingWebService(false, PROJECT_NAME, "views", "RelationalModel.xmi")
@@ -215,7 +274,7 @@ public class WebServiceCreationTest {
 		outputTransfEditor.close();
 		xmlEditor.returnToParentDiagram();
 		xmlEditor.returnToParentDiagram();
-		xmlEditor.renameDocument("putResultsDocument", DOCUMENT_GOOD);
+		xmlEditor.renameDocument("putResultsDocument", DOCUMENT_OK);
 		
 		modelExplorer.addChildToModelItem(ModelExplorer.ChildType.XML_DOCUMENT, xmlModelPath);
 		XmlDocumentBuilderDialog.getInstance()
@@ -230,7 +289,7 @@ public class WebServiceCreationTest {
 		outputTransfEditor.close();
 		xmlEditor.returnToParentDiagram();
 		xmlEditor.returnToParentDiagram();
-		xmlEditor.renameDocument("putResultsDocument", DOCUMENT_BAD);
+		xmlEditor.renameDocument("putResultsDocument", DOCUMENT_FAILED);
 		
 		AbstractWait.sleep(TimePeriod.SHORT);
 		xmlEditor.saveAndClose();	
@@ -314,8 +373,8 @@ public class WebServiceCreationTest {
 		//generateWarAndTestIt("WsRelVdb");
 	}
 	
-	@Test
-	public void testCreationFromXmlDocument() throws IOException{
+	@Test@Ignore
+	public void testCreationFromXmlDocumentDep() throws IOException{
 		// 1. Create Web Service Model
 		modelExplorer.modelingWebService(true, PROJECT_NAME, "views", "XmlModel.xmi", DOCUMENT_PRODUCT)
 				.setLocation(PROJECT_NAME, "web_services")
@@ -585,7 +644,6 @@ public class WebServiceCreationTest {
 				fileHelper.getXmlNoHeader("WebServiceCreationTest/GetRequest.xml"),
 				fileHelper.getXmlNoHeader("WebServiceCreationTest/GetResponseNotFound.xml"));		
 	}
-	
 	private void postRequestHttpBasicSecurity(String soapAction, String uri, String request, String expected) throws IOException{
 		String username = teiidServer.getServerConfig().getServerBase().getProperty("teiidUser");
 		String password = teiidServer.getServerConfig().getServerBase().getProperty("teiidPassword");
