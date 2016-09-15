@@ -122,7 +122,7 @@ public class WebServiceCreationTest {
 		xmlEditor.openDocument(DOCUMENT_PRODUCT);
 		xmlEditor.openMappingClass("ProductOutput_Instance");
 		TransformationEditor transformationEditor = xmlEditor.openTransformationEditor();
-		transformationEditor.insertAndValidateSql("SELECT * FROM RelationalModel.ProductInfo");
+		transformationEditor.insertAndValidateSql("SELECT * FROM ProductsView.ProductInfo");
 		xmlEditor.returnToParentDiagram();
 		xmlEditor.returnToParentDiagram();
 		
@@ -146,20 +146,20 @@ public class WebServiceCreationTest {
 		// 3. Define web service operations
 		WebServiceModelEditor wsEditor = new WebServiceModelEditor(WS_MODEL);
 
-		wsEditor.replaceTextInOperationProcedure(INTERFACE_NAME, OPERATION_GET_ALL, 
+		wsEditor.replaceAllTextInOperationProcedure(INTERFACE_NAME, OPERATION_GET_ALL, 
 				"ProductInfo_getAllProductInfo_getAllProductInfo_Output", DOCUMENT_PRODUCT);
 		
-		wsEditor.replaceTextInOperationProcedure(INTERFACE_NAME, OPERATION_GET, 
-				"ProductInfo_getAllProductInfo_getAllProductInfo_Output", DOCUMENT_PRODUCT);
+		wsEditor.replaceAllTextInOperationProcedure(INTERFACE_NAME, OPERATION_GET, 
+				"ProductInfo_getProductInfo_getProductInfo_Output", DOCUMENT_PRODUCT);
 		wsEditor.replaceTextInOperationProcedure(INTERFACE_NAME, OPERATION_GET, 
 				"REPLACE_WITH_ELEMENT_OR_COLUMN", "ProductOutput.ProductOutput_Instance.INSTR_ID");		
 
 		wsEditor.setOperationProcedure(INTERFACE_NAME, OPERATION_INSERT, fileHelper.getSql("WebServiceCreationTest/InsertWithDeclarations.sql"));
-		wsEditor.replaceTextInOperationProcedure(INTERFACE_NAME, OPERATION_INSERT, 
+		wsEditor.replaceAllTextInOperationProcedure(INTERFACE_NAME, OPERATION_INSERT, 
 				"XmlDocuments", "ProductsWsResponses");
 		
 		wsEditor.setOperationProcedure(INTERFACE_NAME, OPERATION_DELETE, fileHelper.getSql("WebServiceCreationTest/DeleteWithDeclarations.sql"));
-		wsEditor.replaceTextInOperationProcedure(INTERFACE_NAME, OPERATION_DELETE, 
+		wsEditor.replaceAllTextInOperationProcedure(INTERFACE_NAME, OPERATION_DELETE, 
 				"XmlDocuments", "ProductsWsResponses");
 		
 		wsEditor.saveAndClose();
