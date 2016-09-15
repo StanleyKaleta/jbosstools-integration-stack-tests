@@ -142,7 +142,7 @@ public class XmlRecursiveTest {
 	
 		editor.save();
 
-		new ProblemsViewEx().checkErrors();
+		ProblemsViewEx.checkErrors();
 
 		// 3. Create new VDB and check document without recursion		
 		VdbWizard.openVdbWizard()

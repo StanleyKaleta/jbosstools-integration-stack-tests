@@ -3,7 +3,7 @@
   <mmcore:ModelAnnotation xmi:uuid="mmuuid:fa8d0779-e053-451c-952c-68ef6ba2c951" primaryMetamodelUri="http://www.metamatrix.com/metamodels/XmlDocument" modelType="VIRTUAL" ProducerName="Teiid Designer" ProducerVersion="10.0.1.Final-v20160713-1749-B16">
     <modelImports xmi:uuid="mmuuid:5b9f408d-6329-470d-b1a8-d9a8ffe2e34b" name="ProductSchema" modelLocation="../schemas/ProductSchema.xsd" modelType="TYPE" primaryMetamodelUri="http://www.eclipse.org/xsd/2002/XSD"/>
     <modelImports xmi:uuid="mmuuid:f28b51e7-8326-4f0d-a41d-357455f09cc9" name="XMLSchema" modelLocation="http://www.w3.org/2001/XMLSchema" modelType="TYPE" primaryMetamodelUri="http://www.eclipse.org/xsd/2002/XSD"/>
-    <modelImports xmi:uuid="mmuuid:0c5ff059-45b4-44f2-be31-569286886e57" name="RelationalModel" modelLocation="RelationalModel.xmi" uuid="mmuuid:4390ea42-54fd-49cf-8aa0-0e3b69b0ebf4" modelType="VIRTUAL" primaryMetamodelUri="http://www.metamatrix.com/metamodels/Relational"/>
+    <modelImports xmi:uuid="mmuuid:0c5ff059-45b4-44f2-be31-569286886e57" name="ProductsView" modelLocation="ProductsView.xmi" uuid="mmuuid:4390ea42-54fd-49cf-8aa0-0e3b69b0ebf4" modelType="VIRTUAL" primaryMetamodelUri="http://www.metamatrix.com/metamodels/Relational"/>
   </mmcore:ModelAnnotation>
   <vxmldoc:XmlDocument xmi:uuid="mmuuid:971f6a1e-b0c8-4e66-903e-4956aca1dfcd" name="OkResultDocument">
     <root xmi:uuid="mmuuid:7349855d-f2e9-4565-8a5b-d06b6f673799" name="ResultOutput">
@@ -108,51 +108,51 @@
     </transformationMappings>
     <transformationMappings xsi:type="transformation:SqlTransformationMappingRoot" xmi:uuid="mmuuid:96ec574f-794e-4c31-9aca-df48d82c6575" outputs="mmuuid/0495bb56-92ec-4019-9efd-3ec20021b196" target="mmuuid/0495bb56-92ec-4019-9efd-3ec20021b196">
       <helper xsi:type="transformation:SqlTransformation" xmi:uuid="mmuuid:188c0d58-93b6-4dcc-9490-2535b5320541">
-        <nested xsi:type="transformation:SqlTransformation" xmi:uuid="mmuuid:bf84fff5-58b8-4efa-95fb-4661a504fa36" selectSql="SELECT&#xa;&#x9;&#x9;*&#xa;&#x9;FROM&#xa;&#x9;&#x9;RelationalModel.ProductInfo"/>
+        <nested xsi:type="transformation:SqlTransformation" xmi:uuid="mmuuid:bf84fff5-58b8-4efa-95fb-4661a504fa36" selectSql="SELECT&#xa;&#x9;&#x9;*&#xa;&#x9;FROM&#xa;&#x9;&#x9;ProductsView.ProductInfo"/>
         <aliases xmi:uuid="mmuuid:487a4f2e-472b-4a9b-9a94-7d81dd7a9c02" alias="ProductInfo">
-          <aliasedObject href="RelationalModel.xmi#mmuuid/18583b1c-99d9-48db-9905-94569a1a7508"/>
+          <aliasedObject href="ProductsView.xmi#mmuuid/18583b1c-99d9-48db-9905-94569a1a7508"/>
         </aliases>
       </helper>
       <nested xsi:type="transformation:TransformationMapping" xmi:uuid="mmuuid:42533f8f-fcd4-4c4e-bfeb-f890526ac970" outputs="mmuuid/17887abd-6ef7-4a16-af14-0bc36a181322">
-        <inputs href="RelationalModel.xmi#mmuuid/3cc54544-f796-4a9e-b396-46be6ba066f7"/>
+        <inputs href="ProductsView.xmi#mmuuid/3cc54544-f796-4a9e-b396-46be6ba066f7"/>
       </nested>
       <nested xsi:type="transformation:TransformationMapping" xmi:uuid="mmuuid:13ae2bf3-0ee1-4810-9d88-1ac01228be02" outputs="mmuuid/f634d572-8e68-4c0c-9f42-5a0f5df4bd23">
-        <inputs href="RelationalModel.xmi#mmuuid/7cb0d1cc-853a-4eee-974c-583695ef6b05"/>
+        <inputs href="ProductsView.xmi#mmuuid/7cb0d1cc-853a-4eee-974c-583695ef6b05"/>
       </nested>
       <nested xsi:type="transformation:TransformationMapping" xmi:uuid="mmuuid:befa95dd-c666-445d-8c8a-958d467f69d1" outputs="mmuuid/6b1aba35-b1f6-4616-8e3b-9624d2a7d53d">
-        <inputs href="RelationalModel.xmi#mmuuid/55064337-af5b-42b6-b1bd-05c1d1e7fe1d"/>
+        <inputs href="ProductsView.xmi#mmuuid/55064337-af5b-42b6-b1bd-05c1d1e7fe1d"/>
       </nested>
       <nested xsi:type="transformation:TransformationMapping" xmi:uuid="mmuuid:4b4685c1-99a7-4e60-bd92-bd090c8cc9c3" outputs="mmuuid/1f8ae046-b1d4-4126-82b2-d90e88d1ac6f">
-        <inputs href="RelationalModel.xmi#mmuuid/ea89066b-f895-4620-be22-1469841962d4"/>
+        <inputs href="ProductsView.xmi#mmuuid/ea89066b-f895-4620-be22-1469841962d4"/>
       </nested>
       <nested xsi:type="transformation:TransformationMapping" xmi:uuid="mmuuid:eeac6abc-0eca-4cb3-b633-3781ecfcd99a" outputs="mmuuid/6f13dfd0-8cc9-471f-8fce-6082a72eefca">
-        <inputs href="RelationalModel.xmi#mmuuid/4844daa9-915e-4122-be13-e465cbc544aa"/>
+        <inputs href="ProductsView.xmi#mmuuid/4844daa9-915e-4122-be13-e465cbc544aa"/>
       </nested>
       <nested xsi:type="transformation:TransformationMapping" xmi:uuid="mmuuid:3a4b82e3-80cd-4ab5-a5af-e5668e91fb6a" outputs="mmuuid/5a5460e4-7bf3-4cd1-afaf-c3ae79649a8c">
-        <inputs href="RelationalModel.xmi#mmuuid/0bf1691d-f882-4473-903c-1d4fdd768863"/>
+        <inputs href="ProductsView.xmi#mmuuid/0bf1691d-f882-4473-903c-1d4fdd768863"/>
       </nested>
       <nested xsi:type="transformation:TransformationMapping" xmi:uuid="mmuuid:2ff183b6-f6b1-4883-b638-cc5419be67be" outputs="mmuuid/3a0be917-dbb2-4626-8f74-09dba4e3382a">
-        <inputs href="RelationalModel.xmi#mmuuid/5175720c-f4b4-4f9c-955d-8dd75388e42e"/>
+        <inputs href="ProductsView.xmi#mmuuid/5175720c-f4b4-4f9c-955d-8dd75388e42e"/>
       </nested>
       <nested xsi:type="transformation:TransformationMapping" xmi:uuid="mmuuid:b6aabf1a-3cea-4ec7-92b5-c5c5d024e967" outputs="mmuuid/e19fa43b-95d5-4be7-b806-3da040178dbc">
-        <inputs href="RelationalModel.xmi#mmuuid/62bdc856-b453-4ef5-a7f1-5a36bd82d14b"/>
+        <inputs href="ProductsView.xmi#mmuuid/62bdc856-b453-4ef5-a7f1-5a36bd82d14b"/>
       </nested>
       <nested xsi:type="transformation:TransformationMapping" xmi:uuid="mmuuid:54c46b21-d0fb-4b0b-865b-e55a910cd4c6" outputs="mmuuid/ceac1323-7b3a-4b9e-a74a-22c7c8b201db">
-        <inputs href="RelationalModel.xmi#mmuuid/738550ff-fc54-4036-96a7-801a08b03c24"/>
+        <inputs href="ProductsView.xmi#mmuuid/738550ff-fc54-4036-96a7-801a08b03c24"/>
       </nested>
       <nested xsi:type="transformation:TransformationMapping" xmi:uuid="mmuuid:c2237a4b-ccaa-42ab-912c-bf478c1516e8" outputs="mmuuid/aa010eaf-61be-400e-b2d0-51576926c79a">
-        <inputs href="RelationalModel.xmi#mmuuid/5d8ba525-bc19-4a25-9ce7-d39ae36a65fd"/>
+        <inputs href="ProductsView.xmi#mmuuid/5d8ba525-bc19-4a25-9ce7-d39ae36a65fd"/>
       </nested>
       <nested xsi:type="transformation:TransformationMapping" xmi:uuid="mmuuid:05691124-2868-459c-bd7c-3105aca84338" outputs="mmuuid/8ef49a2a-7a76-4aa6-9537-24e25497f36a">
-        <inputs href="RelationalModel.xmi#mmuuid/65194b03-3523-4084-b005-714aff7bbc76"/>
+        <inputs href="ProductsView.xmi#mmuuid/65194b03-3523-4084-b005-714aff7bbc76"/>
       </nested>
       <nested xsi:type="transformation:TransformationMapping" xmi:uuid="mmuuid:5ff89224-d672-48c9-8e45-ed200581fddc" outputs="mmuuid/c4d33feb-cb2c-4858-b7fb-5203f1dfb44c">
-        <inputs href="RelationalModel.xmi#mmuuid/7b3a16c1-26e9-4928-828e-ec45ec4a8d8a"/>
+        <inputs href="ProductsView.xmi#mmuuid/7b3a16c1-26e9-4928-828e-ec45ec4a8d8a"/>
       </nested>
       <nested xsi:type="transformation:TransformationMapping" xmi:uuid="mmuuid:2aa0b5e7-27d5-4930-9a45-42296c376ec9" outputs="mmuuid/52948fec-66f8-45ee-b5c3-63363c94951b">
-        <inputs href="RelationalModel.xmi#mmuuid/e46cea94-f494-4d42-a890-c1e38b049d16"/>
+        <inputs href="ProductsView.xmi#mmuuid/e46cea94-f494-4d42-a890-c1e38b049d16"/>
       </nested>
-      <inputs href="RelationalModel.xmi#mmuuid/18583b1c-99d9-48db-9905-94569a1a7508"/>
+      <inputs href="ProductsView.xmi#mmuuid/18583b1c-99d9-48db-9905-94569a1a7508"/>
     </transformationMappings>
     <transformationMappings xsi:type="transformation:SqlTransformationMappingRoot" xmi:uuid="mmuuid:2bc96f2c-feab-496f-ad22-faa3aff70f21" outputs="mmuuid/92f20a1e-37cf-4352-a8bb-221741ceb6c2" target="mmuuid/92f20a1e-37cf-4352-a8bb-221741ceb6c2">
       <helper xsi:type="transformation:SqlTransformation" xmi:uuid="mmuuid:dd6b3933-5887-4a61-b1da-b64b52562367">

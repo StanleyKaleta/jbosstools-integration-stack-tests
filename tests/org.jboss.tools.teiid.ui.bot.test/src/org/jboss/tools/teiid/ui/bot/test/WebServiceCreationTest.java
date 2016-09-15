@@ -83,7 +83,7 @@ public class WebServiceCreationTest {
 		modelExplorer = new ModelExplorer();
 		modelExplorer.importProject(PROJECT_NAME);
 		modelExplorer.refreshProject(PROJECT_NAME);;
-		modelExplorer.changeConnectionProfile(ConnectionProfileConstants.ORACLE_11G_PRODUCTS, PROJECT_NAME, "sources", "ProductSource.xmi");
+		modelExplorer.changeConnectionProfile(ConnectionProfileConstants.ORACLE_11G_PRODUCTS, PROJECT_NAME, "sources", "ProductsSource.xmi");
 	}
 	
 	@After
@@ -108,12 +108,72 @@ public class WebServiceCreationTest {
 				.nextPage()
 				.finish();
 		
-		// TODO analyze operations and documents (proly as before) - VDB, WAR - getAll insert get delete http-basic
+		new WebServiceModelEditor(WS_MODEL).save();
+		AbstractWait.sleep(TimePeriod.SHORT);
+		
+		modelExplorer.openModelEditor(PROJECT_NAME, "web_services", "ProductsWsResponses.xmi");
+		XmlModelEditor xmlEditor = new XmlModelEditor("ProductsWsResponses.xmi");
+		
+		xmlEditor.deleteDocument("ProductInfo_getAllProductInfo_getAllProductInfo_Output");
+		xmlEditor.renameDocument("ProductInfo_getProductInfo_getProductInfo_Output", DOCUMENT_PRODUCT);
+		xmlEditor.renameDocument("ProductInfo_deleteProductInfo_deleteProductInfo_Output", DOCUMENT_OK);
+		xmlEditor.renameDocument("ProductInfo_insertProductInfo_insertProductInfo_Output", DOCUMENT_FAILED);
+		
+		xmlEditor.openDocument(DOCUMENT_PRODUCT);
+		xmlEditor.openMappingClass("ProductOutput_Instance");
+		TransformationEditor transformationEditor = xmlEditor.openTransformationEditor();
+		transformationEditor.insertAndValidateSql("SELECT * FROM RelationalModel.ProductInfo");
+		xmlEditor.returnToParentDiagram();
+		xmlEditor.returnToParentDiagram();
+		
+		xmlEditor.openDocument(DOCUMENT_OK);
+		xmlEditor.openMappingClass("ResultOutput");
+		transformationEditor = xmlEditor.openTransformationEditor();
+		transformationEditor.insertAndValidateSql("SELECT 'Operation Successful!' AS results");
+		xmlEditor.returnToParentDiagram();
+		xmlEditor.returnToParentDiagram();
+		
+		xmlEditor.openDocument(DOCUMENT_FAILED);
+		xmlEditor.openMappingClass("ResultOutput");
+		transformationEditor = xmlEditor.openTransformationEditor();
+		transformationEditor.insertAndValidateSql("SELECT 'Operation Failed!' AS results");
+		xmlEditor.returnToParentDiagram();
+		xmlEditor.returnToParentDiagram();
+		
+		AbstractWait.sleep(TimePeriod.SHORT);
+		xmlEditor.saveAndClose();
+		
+		// 3. Define web service operations
+		WebServiceModelEditor wsEditor = new WebServiceModelEditor(WS_MODEL);
+
+		wsEditor.replaceTextInOperationProcedure(INTERFACE_NAME, OPERATION_GET_ALL, 
+				"ProductInfo_getAllProductInfo_getAllProductInfo_Output", DOCUMENT_PRODUCT);
+		
+		wsEditor.replaceTextInOperationProcedure(INTERFACE_NAME, OPERATION_GET, 
+				"ProductInfo_getAllProductInfo_getAllProductInfo_Output", DOCUMENT_PRODUCT);
+		wsEditor.replaceTextInOperationProcedure(INTERFACE_NAME, OPERATION_GET, 
+				"REPLACE_WITH_ELEMENT_OR_COLUMN", "ProductOutput.ProductOutput_Instance.INSTR_ID");		
+
+		wsEditor.setOperationProcedure(INTERFACE_NAME, OPERATION_INSERT, fileHelper.getSql("WebServiceCreationTest/InsertWithDeclarations.sql"));
+		wsEditor.replaceTextInOperationProcedure(INTERFACE_NAME, OPERATION_INSERT, 
+				"XmlDocuments", "ProductsWsResponses");
+		
+		wsEditor.setOperationProcedure(INTERFACE_NAME, OPERATION_DELETE, fileHelper.getSql("WebServiceCreationTest/DeleteWithDeclarations.sql"));
+		wsEditor.replaceTextInOperationProcedure(INTERFACE_NAME, OPERATION_DELETE, 
+				"XmlDocuments", "ProductsWsResponses");
+		
+		wsEditor.saveAndClose();
+		AbstractWait.sleep(TimePeriod.SHORT);
+		
+		ProblemsViewEx.checkErrors();
+
+		
+		// TODO VDB, WAR - getAll insert get delete http-basic
 	}
 	
 	@Test
 	public void testCreationFromXmlDocument(){
-		modelExplorer.modelingWebService(true, PROJECT_NAME, "views", "XmlModel.xmi", DOCUMENT_PRODUCT)
+		modelExplorer.modelingWebService(true, PROJECT_NAME, "views", "XmlDocuments.xmi", DOCUMENT_PRODUCT)
 				.setLocation(PROJECT_NAME, "web_services")
 				.setModelName(WS_MODEL.substring(0,10))
 				.setInterfaceName(INTERFACE_NAME)
@@ -123,7 +183,33 @@ public class WebServiceCreationTest {
 				.setOutputMsgName("getAllProductInfo_Output")
 				.finish();
 		
-		// TODO generate VDB, WAR and request qetAll http-basic 
+		new WebServiceModelEditor(WS_MODEL).saveAndClose();
+		
+		ProblemsViewEx.checkErrors();
+		
+		String vdbName = "WsXmlVdb";
+		VdbWizard.openVdbWizard()
+				.setLocation(PROJECT_NAME)
+				.setName(vdbName)
+				.addModel(PROJECT_NAME, "web_services", WS_MODEL)
+				.finish();
+		modelExplorer.deployVdb(PROJECT_NAME, vdbName);
+
+		String warName = vdbName + "War";
+		modelExplorer.generateWar(true, PROJECT_NAME, vdbName)
+				.setVdbJndiName(vdbName)
+				.setContextName(warName)
+				.setWarFileLocation(modelExplorer.getProjectPath(PROJECT_NAME) + "/others")
+				.setHttpBasicSecurity("teiid-security", "products")
+				.finish();
+		modelExplorer.deployWar(teiidServer, PROJECT_NAME, "others", warName); 
+		
+		String response = SimpleHttpClient.postSoapRequest(teiidServer, 
+				"http://localhost:8080/" + warName + "/" + INTERFACE_NAME + "?wsdl", 
+				"getAllProductInfo", 
+				fileHelper.getXmlNoHeader("WebServiceCreationTest/GetAllRequest.xml"));
+		String expected = fileHelper.getXmlNoHeader("WebServiceCreationTest/GetAllResponse.xml");
+		assertEquals(expected, response);
 	}
 
 	@Test
@@ -144,13 +230,6 @@ public class WebServiceCreationTest {
 	@Test@Ignore
 	public void testCreationFromSourceProcedure(){
 		// TODO to be decided - project doesn't contain source procedure yet
-	}
-	
-	@Test@Ignore
-	public void testWsWar(){
-		// TODO to be decided
-		// test security http-basic / none
-		// test CRUD operations
 	}
 	
 	
@@ -188,26 +267,23 @@ public class WebServiceCreationTest {
 		xmlEditor.renameDocument("ProductInfo_insertProductInfo_insertProductsInfo_ResultOutput", DOCUMENT_FAILED);
 		
 		xmlEditor.openDocument(DOCUMENT_PRODUCT);
-		xmlEditor.openMappingClass("ProductsInfo_Output_Instance");
-		TransformationEditor outputTransfEditor = xmlEditor.openTransformationEditor();
-		outputTransfEditor.insertAndValidateSql("SELECT * FROM RelationalModel.ProductInfo");
-		outputTransfEditor.close();
+		xmlEditor.openMappingClass("ProductOutput_Instance");
+		TransformationEditor transformationEditor = xmlEditor.openTransformationEditor();
+		transformationEditor.insertAndValidateSql("SELECT * FROM RelationalModel.ProductInfo");
 		xmlEditor.returnToParentDiagram();
 		xmlEditor.returnToParentDiagram();
 		
 		xmlEditor.openDocument(DOCUMENT_OK);
-		xmlEditor.openMappingClass("putResults");
-		outputTransfEditor = xmlEditor.openTransformationEditor();
-		outputTransfEditor.insertAndValidateSql("SELECT 'Operation Successful!' AS results");
-		outputTransfEditor.close();
+		xmlEditor.openMappingClass("ResultOutput");
+		transformationEditor = xmlEditor.openTransformationEditor();
+		transformationEditor.insertAndValidateSql("SELECT 'Operation Successful!' AS results");
 		xmlEditor.returnToParentDiagram();
 		xmlEditor.returnToParentDiagram();
 		
 		xmlEditor.openDocument(DOCUMENT_FAILED);
-		xmlEditor.openMappingClass("putResults");
-		outputTransfEditor = xmlEditor.openTransformationEditor();
-		outputTransfEditor.insertAndValidateSql("SELECT 'Operation Failed!' AS results");
-		outputTransfEditor.close();
+		xmlEditor.openMappingClass("ResultOutput");
+		transformationEditor = xmlEditor.openTransformationEditor();
+		transformationEditor.insertAndValidateSql("SELECT 'Operation Failed!' AS results");
 		xmlEditor.returnToParentDiagram();
 		xmlEditor.returnToParentDiagram();
 		
@@ -239,7 +315,7 @@ public class WebServiceCreationTest {
 		new OkButton().click();
 		AbstractWait.sleep(TimePeriod.SHORT);
 		
-		new ProblemsViewEx().checkErrors();
+		ProblemsViewEx.checkErrors();
 		
 		// 4. Generate WAR and test it
 		generateWarAndTestIt("WsWsdlVdb");
@@ -371,7 +447,7 @@ public class WebServiceCreationTest {
 		AbstractWait.sleep(TimePeriod.SHORT);
 		wsEditor.saveAndClose();
 		
-		new ProblemsViewEx().checkErrors();	
+		ProblemsViewEx.checkErrors();
 		
 		// 4. Generate WAR and test it
 		//generateWarAndTestIt("WsRelVdb");
@@ -470,12 +546,11 @@ public class WebServiceCreationTest {
 		AbstractWait.sleep(TimePeriod.SHORT);
 		wsEditor.saveAndClose();
 		
-		new ProblemsViewEx().checkErrors();	
+		ProblemsViewEx.checkErrors();
 		
 		// 3. Generate WAR and test it
 		generateWarAndTestIt("WsXmlVdb");
 	}
-
 	private void generateWarAndTestIt(String vdbName) throws IOException{
 		// 1. Create VDB and deploy it
 		VdbWizard.openVdbWizard()
@@ -659,7 +734,6 @@ public class WebServiceCreationTest {
 				.post(request);
 		assertEquals(expected, response);
 	}
-	
 	private void postRequestNoneSecurity(String soapAction, String uri, String request, String expected) throws IOException{
 		String response = new SimpleHttpClient(uri)
 					.addHeader("Content-Type", "text/xml; charset=utf-8")

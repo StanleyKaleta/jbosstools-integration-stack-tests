@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.jboss.tools.teiid.reddeer.requirement.TeiidServerRequirement;
 import org.jboss.tools.teiid.reddeer.util.Base64;
 
 /**
@@ -106,6 +107,44 @@ public class SimpleHttpClient {
 				// ignore - connection is null
 			}
 		}
+	}
+	
+	/**
+	 * Creates and posts specified SOAP request using teiidUser credentials and HTTP-Basic security.
+	 * @return server response, null if error occurs.
+	 */
+	public static String postSoapRequest(TeiidServerRequirement teiidServer, String url, String soapAction, String request){
+		String username = teiidServer.getServerConfig().getServerBase().getProperty("teiidUser");
+		String password = teiidServer.getServerConfig().getServerBase().getProperty("teiidPassword");
+		System.out.println("Using HTTPBasic security with username '" + username + "' and password '" + password + "'");
+		String response = null;
+		try {
+			response = new SimpleHttpClient(url)
+					.setBasicAuth(username, password)
+					.addHeader("Content-Type", "text/xml; charset=utf-8")
+					.addHeader("SOAPAction", soapAction)
+					.post(request);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return response;
+	}
+	
+	/**
+	 * Creates and posts specified SOAP request using None security.
+	 * @return server response, null if error occurs.
+	 */
+	public static String postSoapRequest(String url, String soapAction, String request){
+		String response = null;
+		try {
+			response = new SimpleHttpClient(url)
+					.addHeader("Content-Type", "text/xml; charset=utf-8")
+					.addHeader("SOAPAction", soapAction)
+					.post(request);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return response;
 	}
 
 }

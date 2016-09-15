@@ -137,7 +137,7 @@ public class XmlSchemalessTest {
 		AbstractWait.sleep(TimePeriod.SHORT);
 		editor.save();
 
-		new ProblemsViewEx().checkErrors();
+		ProblemsViewEx.checkErrors();
 		
 		// 4. Create a VDB and query
 		VdbWizard.openVdbWizard()
@@ -189,7 +189,7 @@ public class XmlSchemalessTest {
 		AbstractWait.sleep(TimePeriod.SHORT);
 		editor.save();
 
-		new ProblemsViewEx().checkErrors();
+		ProblemsViewEx.checkErrors();
  		
  		//6. Query the expanded model
  		VdbEditor.getInstance(VDB_NAME).synchronizeAll();

@@ -95,7 +95,7 @@ public class XmlStagingTableTest {
 		AbstractWait.sleep(TimePeriod.SHORT);
 		editor.save();
 		
-		new ProblemsViewEx().checkErrors();
+		ProblemsViewEx.checkErrors();
 		
 		// 3. Model XML document with staging table
 		modelExplorer.addChildToModelItem(ModelExplorer.ChildType.XML_DOCUMENT, PROJECT_NAME, "views", VIEW_MODEL);
@@ -131,7 +131,7 @@ public class XmlStagingTableTest {
 		AbstractWait.sleep(TimePeriod.SHORT);
 		editor.save();
 
-		new ProblemsViewEx().checkErrors();
+		ProblemsViewEx.checkErrors();
 
 		// 4.Create a VDB and deploy
 		VdbWizard.openVdbWizard()
