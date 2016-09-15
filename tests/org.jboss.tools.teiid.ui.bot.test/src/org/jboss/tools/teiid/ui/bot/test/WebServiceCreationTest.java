@@ -146,7 +146,7 @@ public class WebServiceCreationTest {
 		// 3. Define web service operations
 		WebServiceModelEditor wsEditor = new WebServiceModelEditor(WS_MODEL);
 
-		wsEditor.replaceAllTextInOperationProcedure(INTERFACE_NAME, OPERATION_GET_ALL, 
+		wsEditor.replaceTextInOperationProcedure(INTERFACE_NAME, OPERATION_GET_ALL, 
 				"ProductInfo_getAllProductInfo_getAllProductInfo_Output", DOCUMENT_PRODUCT);
 		
 		wsEditor.replaceAllTextInOperationProcedure(INTERFACE_NAME, OPERATION_GET, 
