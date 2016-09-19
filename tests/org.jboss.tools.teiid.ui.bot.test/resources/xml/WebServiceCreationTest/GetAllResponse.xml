@@ -1,10 +1,7 @@
 <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
 	<soap:Body>
-		<ProductInfo:ProductOutput xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
-			xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://teiid.org"
-			xmlns:ProductInfo="http://teiid.org/ProductInfo" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-			xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
-			xmlns:ProductsInfo="http://www.metamatrix.com/ProductsInfo">
+		<ProductInfo:ProductOutput xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+			xmlns:ProductInfo="http://teiid.org/ProductInfo" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 			<ProductOutput_Instance>
 				<INSTR_ID>PRD01095</INSTR_ID>
 				<SYMBOL_TYPE>1</SYMBOL_TYPE>

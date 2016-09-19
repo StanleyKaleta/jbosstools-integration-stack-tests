@@ -1,6 +1,8 @@
 package org.jboss.tools.teiid.ui.bot.test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,9 +18,11 @@ import org.jboss.reddeer.swt.impl.ctab.DefaultCTabItem;
 import org.jboss.reddeer.swt.impl.menu.ShellMenu;
 import org.jboss.reddeer.swt.impl.styledtext.DefaultStyledText;
 import org.jboss.reddeer.swt.impl.text.DefaultText;
+import org.jboss.tools.runtime.reddeer.preference.JBossRuntimeDetection;
 import org.jboss.tools.teiid.reddeer.connection.ConnectionProfileConstants;
 import org.jboss.tools.teiid.reddeer.connection.ResourceFileHelper;
 import org.jboss.tools.teiid.reddeer.connection.SimpleHttpClient;
+import org.jboss.tools.teiid.reddeer.connection.TeiidJDBCHelper;
 import org.jboss.tools.teiid.reddeer.dialog.XmlDocumentBuilderDialog;
 import org.jboss.tools.teiid.reddeer.editor.ModelEditor;
 import org.jboss.tools.teiid.reddeer.editor.RelationalModelEditor;
@@ -93,6 +97,7 @@ public class WebServiceCreationTest {
 	
 	@Test
 	public void testCreationFromWsdl(){
+		// 1. Create Web Service Model
 		modelExplorer.selectItem(PROJECT_NAME, "web_services");
 		MetadataModelWizard.openWizard()
 				.setModelName(WS_MODEL.substring(0,10))
@@ -111,6 +116,7 @@ public class WebServiceCreationTest {
 		new WebServiceModelEditor(WS_MODEL).save();
 		AbstractWait.sleep(TimePeriod.SHORT);
 		
+		// 2. Define XML documents
 		modelExplorer.openModelEditor(PROJECT_NAME, "web_services", "ProductsWsResponses.xmi");
 		XmlModelEditor xmlEditor = new XmlModelEditor("ProductsWsResponses.xmi");
 		
@@ -167,8 +173,70 @@ public class WebServiceCreationTest {
 		
 		ProblemsViewEx.checkErrors();
 
+		// 4. Create VDB and deploy 
+		String vdbName = "WsWsdlVdb";
+		VdbWizard.openVdbWizard()
+				.setLocation(PROJECT_NAME)
+				.setName(vdbName)
+				.addModel(PROJECT_NAME, "web_services", WS_MODEL)
+				.finish();
+		modelExplorer.deployVdb(PROJECT_NAME, vdbName);
+
+		// 5. Create WAR, deploy, send requests and check responses (HTTP-Basic security)
+		String warName = vdbName + "WarHttpBasic";
+		modelExplorer.generateWar(true, PROJECT_NAME, vdbName)
+				.setVdbJndiName(vdbName)
+				.setContextName(warName)
+				.setWarFileLocation(modelExplorer.getProjectPath(PROJECT_NAME) + "/others")
+				.setHttpBasicSecurity("teiid-security", "products")
+				.finish();
+		modelExplorer.deployWar(teiidServer, PROJECT_NAME, "others", warName); 
 		
-		// TODO VDB, WAR - getAll insert get delete http-basic
+		String url = "http://localhost:8080/" + warName + "/" + INTERFACE_NAME + "?wsdl";
+		String request = fileHelper.getXmlNoHeader("WebServiceCreationTest/GetAllRequest.xml");
+		String response = SimpleHttpClient.postSoapRequest(teiidServer, url, "getAllProductInfo", request);
+		String expected = fileHelper.getXmlNoHeader("WebServiceCreationTest/GetAllResponse.xml");
+		assertEquals(expected, response);
+		
+		response = SimpleHttpClient.postSoapRequest(url, "getAllProductInfo", request);
+		assertNull(response);
+		
+		// try catch since here - restore DB
+		
+		request = fileHelper.getXmlNoHeader("WebServiceCreationTest/InsertRequest.xml");
+		response = SimpleHttpClient.postSoapRequest(teiidServer, url, "insertProductInfo", request);
+		expected = fileHelper.getXmlNoHeader("WebServiceCreationTest/ResponseSuccessful.xml");
+		assertEquals(expected, response);
+		
+		response = SimpleHttpClient.postSoapRequest(teiidServer, url, "insertProductInfo", request);
+		expected = fileHelper.getXmlNoHeader("WebServiceCreationTest/ResponseFailed.xml");
+		assertEquals(expected, response);
+		
+		request = fileHelper.getXmlNoHeader("WebServiceCreationTest/GetRequest.xml");
+		response = SimpleHttpClient.postSoapRequest(teiidServer, url, "getProductInfo", request);
+		expected = fileHelper.getXmlNoHeader("WebServiceCreationTest/GetResponse.xml");
+		assertEquals(expected, response);
+		
+		request = fileHelper.getXmlNoHeader("WebServiceCreationTest/DeleteRequest.xml");
+		response = SimpleHttpClient.postSoapRequest(teiidServer, url, "deleteProductInfo", request);
+		expected = fileHelper.getXmlNoHeader("WebServiceCreationTest/ResponseSuccessful.xml");
+		assertEquals(expected, response);
+		
+		response = SimpleHttpClient.postSoapRequest(teiidServer, url, "deleteProductInfo", request);
+		expected = fileHelper.getXmlNoHeader("WebServiceCreationTest/ResponseFailed.xml");
+		assertEquals(expected, response);
+		
+		request = fileHelper.getXmlNoHeader("WebServiceCreationTest/GetRequest.xml");
+		response = SimpleHttpClient.postSoapRequest(teiidServer, url, "getProductInfo", request);
+		expected = fileHelper.getXmlNoHeader("WebServiceCreationTest/ResponseNotFound.xml");
+		assertEquals(expected, response);
+		
+		// 6. Create WAR, deploy, send requests and check responses (None security)
+		
+		
+		
+//		DELETE FROM PRODUCTSYMBOLS WHERE INSTR_ID = 'XXX1234';
+//		DELETE FROM PRODUCTDATA WHERE INSTR_ID = 'XXX1234';
 	}
 	
 	@Test
@@ -212,12 +280,12 @@ public class WebServiceCreationTest {
 		assertEquals(expected, response);
 	}
 
-	@Test
+	@Test@Ignore
 	public void testCreationFromViewTable(){
 		// TODO qenerate WS model
 	}
 	
-	@Test
+	@Test@Ignore
 	public void testCreationFromSourceTable(){
 		// TODO qenerate WS model
 	}

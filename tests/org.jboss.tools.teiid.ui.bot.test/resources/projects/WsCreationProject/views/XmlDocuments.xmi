@@ -14,12 +14,7 @@
         </entities>
         <xsdComponent xsi:type="xsd:XSDModelGroup" href="../schemas/ProductSchema.xsd#//ResultOutput_Type;XSDComplexTypeDefinition=3/XSDParticle/XSDModelGroup"/>
       </entities>
-      <declaredNamespaces xmi:uuid="mmuuid:946f667e-8faf-4e9e-af8d-13c7a2a6f1a2" prefix="wsdl" uri="http://schemas.xmlsoap.org/wsdl/"/>
-      <declaredNamespaces xmi:uuid="mmuuid:444859e4-1668-4c23-b0c9-73f7649c5cce" prefix="tns" uri="http://teiid.org"/>
-      <declaredNamespaces xmi:uuid="mmuuid:26733279-ecf0-4f60-8ba0-588397576e61" prefix="xsd" uri="http://www.w3.org/2001/XMLSchema"/>
-      <declaredNamespaces xmi:uuid="mmuuid:8e76bff6-a5ec-4f17-815c-4fb0e94e059f" prefix="soap" uri="http://schemas.xmlsoap.org/wsdl/soap/"/>
-      <declaredNamespaces xmi:uuid="mmuuid:c233fe93-ed0c-4058-b4ee-d57b6a0e7f4b" prefix="ProductsInfo" uri="http://www.metamatrix.com/ProductsInfo"/>
-      <declaredNamespaces xmi:uuid="mmuuid:452b2a37-3b90-4995-a00b-84607c8e0fcb" prefix="ProductInfo" uri="http://teiid.org/ProductInfo"/>
+      <declaredNamespaces xmi:uuid="mmuuid:bbbdbe81-d4e8-4b28-bba4-0cf02e321917" prefix="xsd" uri="http://www.w3.org/2001/XMLSchema"/>
     </root>
   </vxmldoc:XmlDocument>
   <vxmldoc:XmlDocument xmi:uuid="mmuuid:4319d758-23d8-451c-9a39-fce647d8f643" name="ProductDocument">
@@ -73,12 +68,8 @@
         </entities>
         <xsdComponent xsi:type="xsd:XSDModelGroup" href="../schemas/ProductSchema.xsd#//ProductOutput;XSDElementDeclaration=3/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup"/>
       </entities>
-      <declaredNamespaces xmi:uuid="mmuuid:ace9ef54-769f-4c00-b710-073eadd90d1f" prefix="wsdl" uri="http://schemas.xmlsoap.org/wsdl/"/>
-      <declaredNamespaces xmi:uuid="mmuuid:b3a3e99c-fe0c-4ae3-8134-c20511811f2b" prefix="tns" uri="http://teiid.org"/>
       <declaredNamespaces xmi:uuid="mmuuid:00c834b5-5d70-4650-b19f-a0a237f9420c" prefix="xsd" uri="http://www.w3.org/2001/XMLSchema"/>
-      <declaredNamespaces xmi:uuid="mmuuid:33532cd4-3b14-4b1c-9f8c-8b5e285c9687" prefix="soap" uri="http://schemas.xmlsoap.org/wsdl/soap/"/>
-      <declaredNamespaces xmi:uuid="mmuuid:2d19624f-4f8c-442b-aa95-6bde141f9b2d" prefix="ProductsInfo" uri="http://www.metamatrix.com/ProductsInfo"/>
-      <declaredNamespaces xmi:uuid="mmuuid:4c6b09e8-e4f1-4225-ac83-2b31f441313c" prefix="ProductInfo" uri="http://teiid.org/ProductInfo"/>
+      <declaredNamespaces xmi:uuid="mmuuid:b096d52a-4d1a-488a-8740-4d8cda821d25" prefix="ProductInfo" uri="http://teiid.org/ProductInfo"/>
     </root>
   </vxmldoc:XmlDocument>
   <transformation:TransformationContainer xmi:uuid="mmuuid:2d1e7ef0-4830-4d2a-92e2-2c32ae74cef4">
@@ -243,12 +234,6 @@
         </entities>
         <xsdComponent xsi:type="xsd:XSDModelGroup" href="../schemas/ProductSchema.xsd#//ResultOutput_Type;XSDComplexTypeDefinition=3/XSDParticle/XSDModelGroup"/>
       </entities>
-      <declaredNamespaces xmi:uuid="mmuuid:1da01990-0246-4cfa-9a51-9bc0a890c98c" prefix="wsdl" uri="http://schemas.xmlsoap.org/wsdl/"/>
-      <declaredNamespaces xmi:uuid="mmuuid:74eda723-e852-4874-b335-68c4fb768fe6" prefix="tns" uri="http://teiid.org"/>
-      <declaredNamespaces xmi:uuid="mmuuid:e5c6835e-c574-4d40-b32b-27de7700045f" prefix="xsd" uri="http://www.w3.org/2001/XMLSchema"/>
-      <declaredNamespaces xmi:uuid="mmuuid:fe09fc01-ad15-44d7-8dcd-9bf75d87ba93" prefix="soap" uri="http://schemas.xmlsoap.org/wsdl/soap/"/>
-      <declaredNamespaces xmi:uuid="mmuuid:fd9ea210-ad14-4162-8b0d-d31c5a6b6c8b" prefix="ProductsInfo" uri="http://www.metamatrix.com/ProductsInfo"/>
-      <declaredNamespaces xmi:uuid="mmuuid:a61eb88d-2212-4f7f-a17b-a3519bd0aaa5" prefix="ProductInfo" uri="http://teiid.org/ProductInfo"/>
     </root>
   </vxmldoc:XmlDocument>
 </xmi:XMI>
