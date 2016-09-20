@@ -52,12 +52,9 @@ import org.junit.runner.RunWith;
  * @author skaleta
  * tested features:
  * - create WebService Model:
- * 		- from WSDL file, complete generated XML documents, generate SOAP WAR and test it: 
+ * 		- from WSDL file, complete generated XML documents, generate SOAP WAR (HTTP-Basic/None security) and test it 
  * 		- from XML document + test generated operation
- * 
- * 
- * - create and fulfill operations
- * - generate, deploy and test SOAP WAR 
+ * 		- from source/view table/procedure + test generated operation
  */
 @RunWith(RedDeerSuite.class)
 @OpenPerspective(TeiidPerspective.class)
@@ -166,13 +163,9 @@ public class WebServiceCreationTest {
 		wsEditor.replaceTextInOperationProcedure(INTERFACE_NAME, OPERATION_GET, 
 				"REPLACE_WITH_ELEMENT_OR_COLUMN", "ProductOutput.ProductOutput_Instance.INSTR_ID");		
 
-		wsEditor.setOperationProcedure(INTERFACE_NAME, OPERATION_INSERT, fileHelper.getSql("WebServiceCreationTest/InsertWithDeclarations.sql"));
-		wsEditor.replaceAllTextInOperationProcedure(INTERFACE_NAME, OPERATION_INSERT, 
-				"XmlDocuments", "ProductsWsResponses");
+		wsEditor.setOperationProcedure(INTERFACE_NAME, OPERATION_INSERT, fileHelper.getSql("WebServiceCreationTest/Insert.sql"));
 		
-		wsEditor.setOperationProcedure(INTERFACE_NAME, OPERATION_DELETE, fileHelper.getSql("WebServiceCreationTest/DeleteWithDeclarations.sql"));
-		wsEditor.replaceAllTextInOperationProcedure(INTERFACE_NAME, OPERATION_DELETE, 
-				"XmlDocuments", "ProductsWsResponses");
+		wsEditor.setOperationProcedure(INTERFACE_NAME, OPERATION_DELETE, fileHelper.getSql("WebServiceCreationTest/Delete.sql"));
 		
 		wsEditor.saveAndClose();
 		AbstractWait.sleep(TimePeriod.SHORT);
